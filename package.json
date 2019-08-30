@@ -1,0 +1,51 @@
+{
+  "name": "@ogod/site",
+  "version": "0.0.0",
+  "description": "Presentation web site that uses OGOD core & three.",
+  "main": "index.js",
+  "module": "dist/index.js",
+  "files": [
+    "/dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "license": "MIT",
+  "author": "Elvynia",
+  "dependencies": {
+    "@ogod/core": "0.0.6",
+    "@ogod/runtime-three": "file:../ogod-three/ogod-runtime-three-0.0.3.tgz",
+    "bulma": "^0.7.5",
+    "lit-element-i18n": "^0.1.1",
+    "three": "^0.107.0"
+  },
+  "scripts": {
+    "clean": "rm -rf dist/",
+    "compile": "npm run clean && tsc",
+    "start": "polymer serve",
+    "dev": "npm run clean && tsc --watch"
+  },
+  "keywords": [
+    "ogod",
+    "webgl",
+    "three",
+    "three.js",
+    "html",
+    "web",
+    "component",
+    "polymer",
+    "lit"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Elvynia/ogod-site.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Elvynia/ogod-site/issues"
+  },
+  "homepage": "https://github.com/Elvynia/ogod-site#readme",
+  "devDependencies": {
+    "http-server": "^0.11.1",
+    "polymer-cli": "^1.9.11",
+    "typescript": "^3.5.3"
+  }
+}

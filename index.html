@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+        <base href="/">
+        <title>OGOD: Of Games and Open Development</title>
+
+        <script>
+            // HACK(keanulee): The Redux package assumes `process` exists - mock it here before
+            // the module is loaded.
+            window.process = {
+                env: {
+                    // NODE_ENV: 'development'
+                    NODE_ENV: 'validation'
+                    // NODE_ENV: 'production'
+                }
+            };
+        </script>
+        <script type="module" src="node_modules/@ogod/core/dist/index.js"></script>
+        <script type="module" src="node_modules/@ogod/runtime-three/dist/index.js"></script>
+        <script type="module" src="node_modules/@ogod/runtime-three/dist/feature/three-spiralcolor-points.js"></script>
+        <script type="module" src="dist/index.js"></script>
+
+        <link rel="stylesheet" href="index.css">
+    </head>
+    <body>
+        <ogod-i18n-app></ogod-i18n-app>
+    </body>
+</html>
