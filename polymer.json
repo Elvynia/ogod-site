@@ -2,5 +2,33 @@
     "entrypoint": "index.html",
     "shell": "dist/index.js",
     "npm": true,
-    "moduleResolution": "node"
+    "moduleResolution": "node",
+    "sources": [
+        "dist/**/*"
+    ],
+    "extraDependencies": [
+        "node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js",
+        "node_modules/@ogod/core/dist/index.js",
+        "node_modules/@ogod/runtime-three/dist/index.js",
+        "node_modules/@ogod/runtime-three/dist/feature/three-spiralcolor-points.js",
+        "node_modules/three/build/three.module.js",
+        "node_modules/i18next/dist/es/index.js",
+        "node_modules/i18next-xhr-backend/i18nextXHRBackend.min.js",
+        "node_modules/lit-element-i18n/lit-element-i18n.js",
+        "node_modules/bulma/css/bulma.min.css",
+        "assets/**",
+        "index.css"
+    ],
+    "builds": [
+        {
+            "name": "ghpages",
+            "preset": "es6-unbundled",
+            "basePath": "ogod-site/"
+        }
+    ],
+    "lint": {
+        "rules": [
+            "polymer-3"
+        ]
+    }
 }
