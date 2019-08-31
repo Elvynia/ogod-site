@@ -104,6 +104,9 @@ export class OgodI18nApp extends mixi(LitElement) {
                 <div class="navbar-start" @click="${this.openMenu}">
                     <a ogod-action='{ "type": "ENGINE_SCENE_LOAD", "payload": { "id": "${ENGINE_ID_MAIN}", "sceneId": "${SCENE_ID_START}"}}'
                         class="navbar-item">${translate('app:introScene')}</a>
+                    <a class="navbar-item" href="https://github.com/Elvynia/ogod-site" target="_blank">
+                        ${translate('app:sources')}
+                    </a>
                     <div class="navbar-item has-dropdown is-hoverable">
                         <a class="navbar-link">
                             ${translate('projects')}
