@@ -1,39 +1,38 @@
-import { loadEngineScene, ogodState$, ogodStore } from '@ogod/core';
-import { ThreePointsRuntime, ThreeSceneRuntime } from '@ogod/runtime-three';
-import { customElement, html, LitElement, query } from 'lit-element';
-import { animationFrameScheduler, defer, interval } from 'rxjs';
-import { filter, map, take, takeWhile, tap, switchMap } from 'rxjs/operators';
+import { loadEngineScene, ogodState$, ogodStore, OgodInstanceEntity } from '@ogod/core';
+import { ThreePointsRuntime, ThreeSceneRuntime, ThreePointsEntity, ThreePointsElement } from '@ogod/runtime-three';
+import { customElement, html, LitElement } from 'lit-element';
+import { filter, map, switchMap, take } from 'rxjs/operators';
 import { Color } from 'three';
+import { backIn, distance, duration, elasticOut, sineOut } from './animation';
+import { ENGINE_ID_MAIN, SCENE_ID_START } from './constants';
+import { Subscription } from 'rxjs';
 
-@customElement('ogod-site-intro')
-export class OgodSiteIntro extends LitElement {
+export const INSTANCE_ID_INTRO = 'intropoints';
 
-    private heading: HTMLElement;
+export class OgodSiteIntroEntity extends ThreePointsEntity {
+    heading: HTMLElement;
+}
+
+export class OgodSiteIntroRuntime extends ThreePointsRuntime {
+
+    private sub: Subscription;
     private sceneColor: Color;
 
-    render() {
-        return html`
-        <three-points name="intropoints">
-            <three-points-material size="10" color="white" transparent></three-points-material>
-        </three-points>
-        <slot></slot>
-        `;
+    start(entity: OgodSiteIntroEntity): OgodInstanceEntity {
+        this.startAnimation(entity.heading);
+        return super.start(entity);
     }
 
-    firstUpdated() {
-        this.heading = this.querySelector('.heading');
-    }
-
-    async connectedCallback() {
-        this.style.display = 'block';
-        super.connectedCallback();
-        ogodState$().pipe(
-            map((state) => state.instances['intropoints']),
+    private startAnimation(heading: HTMLElement) {
+        heading.style.opacity = '1';
+        this.stopAnimation();
+        this.sub = ogodState$().pipe(
+            map((state) => state.instances[INSTANCE_ID_INTRO]),
             filter((instance) => instance && instance.entity.initialized),
             map(({ runtime }) => (<ThreePointsRuntime>runtime).instance),
             take(1),
             switchMap((threeObj) => ogodState$().pipe(
-                map((state) => state.scenes['start']),
+                map((state) => state.scenes[SCENE_ID_START]),
                 filter((scene) => scene && scene.entity.loaded),
                 map((scene) => (<ThreeSceneRuntime>scene.runtime).instance),
                 map((scene) => ({
@@ -43,27 +42,10 @@ export class OgodSiteIntro extends LitElement {
                 take(1)
             ))
         ).subscribe((arg) => {
-            // TODO: move the functions somewhere !
-            let msElapsed = (scheduler = animationFrameScheduler) => defer(() => {
-                const start = scheduler.now();
-                return interval(0, scheduler).pipe(
-                    map(() => scheduler.now() - start)
-                );
-            });
-            let duration = (time) => msElapsed().pipe(
-                map((ms) => ms / time),
-                takeWhile((val) => val <= 1)
-            );
-            let distance = (dist) => (time) => dist * time;
-            function elasticOut(t) {
-                return Math.sin(-13.0 * (t + 1.0) * Math.PI / 2) * Math.pow(2.0, -10.0 * t) + 1.0
-            }
-            function backIn(t) {
-                var s = 1.70158
-                return t * t * ((s + 1) * t - s)
-            }
-            function sineOut(t) {
-                return Math.sin(t * Math.PI / 2)
+            if (this.sceneColor) {
+                (arg.scene.background as Color).set(this.sceneColor);
+                this.sceneColor = undefined;
+                arg.threeObj.position.set(0, 0, 0);
             }
             duration(6000).pipe(
                 map(elasticOut),
@@ -81,20 +63,58 @@ export class OgodSiteIntro extends LitElement {
                         ).subscribe({
                             next: (frame) => {
                                 if (!this.sceneColor) {
-                                    this.sceneColor = arg.scene.background as Color;
+                                    this.sceneColor = new Color().set(arg.scene.background as Color);
                                 }
                                 (arg.scene.background as Color).set(new Color(
                                     this.sceneColor.r - (this.sceneColor.r * frame),
                                     this.sceneColor.g - (this.sceneColor.g * frame),
                                     this.sceneColor.b - (this.sceneColor.b * frame)
                                 ));
-                                this.heading.style.opacity = (1 - frame).toString()
+                                heading.style.opacity = (1 - frame).toString()
                             },
-                            complete: () => ogodStore.dispatch(loadEngineScene('main', 'logos'))
+                            complete: () => ogodStore.dispatch(loadEngineScene(ENGINE_ID_MAIN, 'logos'))
                         })
                     });
                 }
             });
         });
     }
+
+    private stopAnimation() {
+        if (this.sub) {
+            this.sub.unsubscribe();
+        }
+    }
+}
+
+@customElement('ogod-site-intro')
+export class OgodSiteIntroElement extends ThreePointsElement {
+
+    constructor() {
+        super();
+        this.name = INSTANCE_ID_INTRO;
+        this.impl = () => new OgodSiteIntroRuntime();
+    }
+
+    getEntity(): OgodSiteIntroEntity {
+        return {
+            ...super.getEntity(),
+            heading: this.querySelector('.heading')
+        }
+    }
+
+    render() {
+        return html`
+        <slot>
+            <three-buffer-geometry></three-buffer-geometry>
+            <three-points-material size="10" color="white" transparent></three-points-material>
+        </slot>`;
+    }
+
+    async connectedCallback() {
+        this.style.display = 'block';
+        super.connectedCallback();
+    }
+
+    
 }

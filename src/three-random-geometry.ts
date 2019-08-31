@@ -11,14 +11,7 @@ export class ThreeRandomGeometryElement extends ThreeFixtureElement {
 
     constructor() {
         super();
-        this.geometries = [
-            new BoxBufferGeometry(15, 15, 15),
-            new BoxBufferGeometry(15, 10, 10),
-            new SphereBufferGeometry(10, 64, 64),
-            new BoxBufferGeometry(10, 15, 10),
-            new TorusKnotBufferGeometry(10, 3, 50, 8),
-            new BoxBufferGeometry(10, 10, 15)
-        ];
+        this.geometries = [];
     }
 
     get instanceId(): string {
@@ -36,6 +29,10 @@ export class ThreeRandomGeometryElement extends ThreeFixtureElement {
 
     async connectedCallback() {
         this.classList.add('threeGeometry');
+        for (let i = 0; i <= 25; ++i) {
+            this.geometries.push(new TorusKnotBufferGeometry(10, 2, 128, 32, 1, i));
+            this.geometries.push(new TorusKnotBufferGeometry(10, 2, 128, 32, i, 1));
+        }
         super.connectedCallback();
     }
 

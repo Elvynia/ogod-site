@@ -8,13 +8,12 @@ import { ogodState$ } from "@ogod/core";
 import { filter, map, switchMap, take, mapTo, tap } from "rxjs/operators";
 import { interval } from "rxjs";
 import i18next from 'i18next'
+import { ENGINE_ID_LOGO, ENGINE_ID_MAIN, SCENE_ID_START, SCENE_ID_LOGOS } from "./constants";
 
 type Constructor<T = {}> = new (...args: any[]) => T;
 function mixi<TBase extends Constructor>(Base: TBase): TBase {
     return i18nMixin(Base);
 }
-const ENGINE_ID_LOGO = 'logo-engine';
-const ENGINE_ID_MAIN = 'main-engine';
 
 export class OgodI18nApp extends mixi(LitElement) {
 
@@ -103,7 +102,7 @@ export class OgodI18nApp extends mixi(LitElement) {
             </div>
             <div class="navbar-menu">
                 <div class="navbar-start" @click="${this.openMenu}">
-                    <a ogod-action='{ "type": "ENGINE_SCENE_LOAD", "payload": { "id": "${ENGINE_ID_MAIN}", "sceneId": "start"}}'
+                    <a ogod-action='{ "type": "ENGINE_SCENE_LOAD", "payload": { "id": "${ENGINE_ID_MAIN}", "sceneId": "${SCENE_ID_START}"}}'
                         class="navbar-item">${translate('app:introScene')}</a>
                     <div class="navbar-item has-dropdown is-hoverable">
                         <a class="navbar-link">
@@ -150,9 +149,9 @@ export class OgodI18nApp extends mixi(LitElement) {
                 </div>
             </div>
         </nav>
-        <ogod-engine id="${ENGINE_ID_MAIN}" init-scene="start" pauseonescape>
+        <ogod-engine id="${ENGINE_ID_MAIN}" init-scene="${SCENE_ID_START}" pauseonescape>
             <three-renderer width="100%" height="100%">
-                <three-scene id="start" class="ogodCenter"
+                <three-scene id="${SCENE_ID_START}" class="ogodCenter"
                     load-map='{ "instances": ["intropoints"] }' background="#a4b0f5">
                     <ogod-site-intro>
                         <div class="heading">
@@ -163,7 +162,7 @@ export class OgodI18nApp extends mixi(LitElement) {
                         </div>
                     </ogod-site-intro>
                 </three-scene>
-                <three-scene id="logos">
+                <three-scene id="${SCENE_ID_LOGOS}">
                     <three-textures name="webcomponent_logos" path="assets/webcomponent/logo" end="4" ext=".png"></three-textures>
                     <three-spiralcolor-points name="webcomponent_points" resource="webcomponent_logos"></three-spiralcolor-points>
                 </three-scene>
@@ -179,7 +178,6 @@ export class OgodI18nApp extends mixi(LitElement) {
             filter((engine) => engine && engine.entity.renderer
                 && engine.entity.renderer.entity.initialized),
             map((engine) => (engine.entity.renderer.entity as ThreeRendererEntity).camera),
-            tap((camera) => console.log(camera)),
             take(1),
             switchMap((camera) => interval(100).pipe(
                 filter(() => i18next.isInitialized),
