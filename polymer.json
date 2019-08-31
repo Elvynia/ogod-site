@@ -23,8 +23,7 @@
     "builds": [
         {
             "name": "ghpages",
-            "preset": "es6-unbundled",
-            "basePath": "ogod-site/"
+            "preset": "es6-unbundled"
         }
     ],
     "lint": {
