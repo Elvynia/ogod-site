@@ -62,9 +62,9 @@ export class OgodSiteIntro extends LitElement {
                 var s = 1.70158
                 return t * t * ((s + 1) * t - s)
             }
-            function qinticOut(t) {
-                return --t * t * t * t * t + 1
-              }
+            function sineOut(t) {
+                return Math.sin(t * Math.PI / 2)
+            }
             duration(6000).pipe(
                 map(elasticOut),
                 map(distance(400))
@@ -76,8 +76,8 @@ export class OgodSiteIntro extends LitElement {
                         map(distance(1500))
                     ).subscribe({
                         next: (frame) => arg.threeObj.position.setZ(frame),
-                        complete: () => duration(2000).pipe(
-                            map(qinticOut)
+                        complete: () => duration(1500).pipe(
+                            map(sineOut)
                         ).subscribe({
                             next: (frame) => {
                                 if (!this.sceneColor) {
