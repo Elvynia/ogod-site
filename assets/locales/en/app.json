@@ -1,4 +1,7 @@
 {
     "language": "Language",
-    "welcome": "Welcome to the OGOD experience"
+    "welcome": "Welcome to the OGOD experience",
+    "introScene": "Introduction scene",
+    "projects": "Projects on Github",
+    "more": "More"
 }

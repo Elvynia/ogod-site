@@ -8,6 +8,7 @@
     ],
     "extraDependencies": [
         "node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js",
+        "node_modules/custom-attributes/**",
         "node_modules/@ogod/core/dist/index.js",
         "node_modules/@ogod/runtime-three/dist/index.js",
         "node_modules/@ogod/runtime-three/dist/feature/three-spiralcolor-points.js",

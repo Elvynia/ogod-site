@@ -1,12 +1,20 @@
 import { LitElement, html, css, query } from "lit-element";
 import { i18nMixin, translate } from 'lit-element-i18n';
-import { ThreeRendererElement } from "@ogod/runtime-three";
+import { OgodActionAttribute } from '@ogod/core/dist/feature/ogod-action';
+import { ThreeRendererElement, ThreeRendererEntity } from "@ogod/runtime-three";
 import { ThreeRandomGeometryElement } from "./three-random-geometry";
-type Constructor<T = {}> = new (...args: any[]) => T;
+import { CustomAttributeRegistry } from 'custom-attributes';
+import { ogodState$ } from "@ogod/core";
+import { filter, map, switchMap, take, mapTo, tap } from "rxjs/operators";
+import { interval } from "rxjs";
+import i18next from 'i18next'
 
+type Constructor<T = {}> = new (...args: any[]) => T;
 function mixi<TBase extends Constructor>(Base: TBase): TBase {
     return i18nMixin(Base);
 }
+const ENGINE_ID_LOGO = 'logo-engine';
+const ENGINE_ID_MAIN = 'main-engine';
 
 export class OgodI18nApp extends mixi(LitElement) {
 
@@ -23,6 +31,13 @@ export class OgodI18nApp extends mixi(LitElement) {
         this.supportedLangs = ['fr', 'en'];
         (<any>this).languageResources = '/assets/locales/{{lng}}/{{ns}}.json';
     }
+    
+    createRenderRoot() {
+        let root = super.createRenderRoot();
+        const attributes = new CustomAttributeRegistry(root)
+        attributes.define('ogod-action', OgodActionAttribute);
+        return root;
+    }
 
     static get styles() {
         return css`
@@ -32,7 +47,7 @@ export class OgodI18nApp extends mixi(LitElement) {
             padding: 0;
         }
 
-        ogod-engine#ogod-logo {
+        ogod-engine#logo-engine {
             user-select: none;
         }
 
@@ -55,7 +70,7 @@ export class OgodI18nApp extends mixi(LitElement) {
 
         div.heading h2 span {
             font-weight: bold;
-            color: #961890;
+            color: #216498;
         }
 
         `;
@@ -66,7 +81,7 @@ export class OgodI18nApp extends mixi(LitElement) {
         <nav class="navbar is-info" role="navigation" aria-label="main navigation">
             <div class="navbar-brand">
                 <a class="navbar-item no-padding" @click="${this.changeLogo}">
-                    <ogod-engine id="ogod-logo" init-scene="ogod-default-scene" pauseonescape>
+                    <ogod-engine id="${ENGINE_ID_LOGO}" init-scene="ogod-default-scene" pauseonescape>
                         <three-renderer id="logoRenderer" width="65px" height="65px" alpha>
                             <three-scene>
                                 <three-spot-light name="ambient" color="#ffffff" intensity="0.6">
@@ -87,22 +102,33 @@ export class OgodI18nApp extends mixi(LitElement) {
                 </a>
             </div>
             <div class="navbar-menu">
-                <div class="navbar-start" onclick="document.querySelector('.navbar-menu').classList.remove('is-active');">
-                    <a class="navbar-item">Previous scene </a>
+                <div class="navbar-start" @click="${this.openMenu}">
+                    <a ogod-action='{ "type": "ENGINE_SCENE_LOAD", "payload": { "id": "${ENGINE_ID_MAIN}", "sceneId": "start"}}'
+                        class="navbar-item">${translate('app:introScene')}</a>
                     <div class="navbar-item has-dropdown is-hoverable">
                         <a class="navbar-link">
-                            More
+                            ${translate('projects')}
                         </a>
                         <div class="navbar-dropdown">
-                            <a class="navbar-item" href="https://github.com/Elvynia/ogod-core">
-                                Github
+                            <a class="navbar-item" href="https://github.com/Elvynia/ogod-core" target="_blank">
+                                OGOD Core
                             </a>
-                            <a class="navbar-item" href="https://github.com/Elvynia/ogod-core/issues">
-                                Report an issue
+                            <a class="navbar-item" href="https://github.com/Elvynia/ogod-pixi" target="_blank"">
+                                OGOD Pixi.js
                             </a>
-                            <hr class="navbar-divider">
-                            <a class="navbar-item" href="https://www.linkedin.com/in/j%C3%A9r%C3%A9my-masson-a800a8aa/">
-                                Contact
+                            <a class="navbar-item" href="https://github.com/Elvynia/ogod-three" target="_blank">
+                                OGOD Three.js
+                            </a>
+                        </div>
+                    </div>
+                    <div class="navbar-item has-dropdown is-hoverable">
+                        <a class="navbar-link">
+                            ${translate('more')}
+                        </a>
+                        <div class="navbar-dropdown">
+                            <a class="navbar-item" href="https://www.linkedin.com/in/j%C3%A9r%C3%A9my-masson-a800a8aa/"
+                                target="_blank">
+                                LinkedIn
                             </a>
                         </div>
                     </div>
@@ -110,7 +136,7 @@ export class OgodI18nApp extends mixi(LitElement) {
                 <div class="navbar-end">
                     <div class="navbar-item has-dropdown is-hoverable">
                         <a class="navbar-link">
-                            ${translate('app:language')}
+                            ${translate('language')}
                         </a>
                         <div class="navbar-dropdown">
                             <a id="fr" class="navbar-item" @click='${this.changeLanguages}'>
@@ -124,13 +150,13 @@ export class OgodI18nApp extends mixi(LitElement) {
                 </div>
             </div>
         </nav>
-        <ogod-engine id="main" init-scene="start" pauseonescape>
+        <ogod-engine id="${ENGINE_ID_MAIN}" init-scene="start" pauseonescape>
             <three-renderer width="100%" height="100%">
                 <three-scene id="start" class="ogodCenter"
                     load-map='{ "instances": ["intropoints"] }' background="#a4b0f5">
                     <ogod-site-intro>
                         <div class="heading">
-                            <h1>${translate('app:welcome')}</h1>
+                            <h1>${translate('welcome')}</h1>
                             <h2>
                                 <span>O</span>f <span>G</span>ames and <span>O</span>pen <span>D</span>evelopment !
                             </h2>
@@ -148,14 +174,25 @@ export class OgodI18nApp extends mixi(LitElement) {
 
     connectedCallback() {
         super.connectedCallback();
-        // FIXME: waiting for languages to load + renderer to have camera. Use ogodState$.
-        setTimeout(() => {
+        ogodState$().pipe(
+            map((state) => state.engines[ENGINE_ID_LOGO]),
+            filter((engine) => engine && engine.entity.renderer
+                && engine.entity.renderer.entity.initialized),
+            map((engine) => (engine.entity.renderer.entity as ThreeRendererEntity).camera),
+            tap((camera) => console.log(camera)),
+            take(1),
+            switchMap((camera) => interval(100).pipe(
+                filter(() => i18next.isInitialized),
+                take(1),
+                mapTo(camera)
+            ))
+        ).subscribe((camera) => {
             let userLang = navigator.language.split('-')[0];
             if (this.supportedLangs.indexOf(userLang) >= 0) {
                 this.changeLanguages(userLang);
             }
-            this.renderer.getCamera().position.z = 30;
-        }, 1000);
+            camera.position.z = 30;
+        });
     }
 
     changeLanguages(event) {
@@ -170,6 +207,10 @@ export class OgodI18nApp extends mixi(LitElement) {
 
     changeLogo() {
         this.geometry.nextGeometry();
+    }
+
+    openMenu() {
+        this.shadowRoot.querySelector('.navbar-menu').classList.remove('is-active');
     }
 }
 
