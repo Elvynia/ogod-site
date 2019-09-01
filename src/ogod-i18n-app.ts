@@ -72,6 +72,9 @@ export class OgodI18nApp extends mixi(LitElement) {
             color: #216498;
         }
 
+        div.navbar-burger {
+            height: inherit;
+        }
         `;
     }
 
@@ -94,11 +97,11 @@ export class OgodI18nApp extends mixi(LitElement) {
                         </three-renderer>
                     </ogod-engine>
                 </a>
-                <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" @click="${this.openMenu}">
+                <div class="navbar-burger" aria-label="menu" aria-expanded="false" @click="${this.toggleMenu}">
                     <span aria-hidden="true"></span>
                     <span aria-hidden="true"></span>
                     <span aria-hidden="true"></span>
-                </a>
+                </div>
             </div>
             <div class="navbar-menu">
                 <div class="navbar-start" @click="${this.closeMenu}">
@@ -210,11 +213,13 @@ export class OgodI18nApp extends mixi(LitElement) {
         this.geometry.nextGeometry();
     }
 
-    openMenu() {
-        this.shadowRoot.querySelector('.navbar-menu').classList.add('is-active');
+    toggleMenu(event) {
+        event.target.classList.toggle('is-active');
+        this.shadowRoot.querySelector('.navbar-menu').classList.toggle('is-active');
     }
 
     closeMenu() {
+        this.shadowRoot.querySelector('.navbar-burger').classList.remove('is-active');
         this.shadowRoot.querySelector('.navbar-menu').classList.remove('is-active');
     }
 
