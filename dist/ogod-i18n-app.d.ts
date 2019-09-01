@@ -12,6 +12,7 @@ export declare class OgodI18nApp extends OgodI18nApp_base {
     createRenderRoot(): Element | ShadowRoot;
     static readonly styles: import("lit-element").CSSResult;
     render(): import("lit-element").TemplateResult;
+    firstUpdated(changes: any): void;
     connectedCallback(): void;
     changeLanguages(event: any): void;
     changeLogo(): void;
