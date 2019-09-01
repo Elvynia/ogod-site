@@ -6,6 +6,8 @@ export declare class OgodI18nApp extends OgodI18nApp_base {
     geometry: ThreeRandomGeometryElement;
     renderer: ThreeRendererElement;
     private supportedLangs;
+    private width;
+    private height;
     constructor();
     createRenderRoot(): Element | ShadowRoot;
     static readonly styles: import("lit-element").CSSResult;
@@ -13,7 +15,7 @@ export declare class OgodI18nApp extends OgodI18nApp_base {
     connectedCallback(): void;
     changeLanguages(event: any): void;
     changeLogo(): void;
-    openMenu(): void;
+    toggleMenu(event: any): void;
     closeMenu(): void;
     private addBaseHref;
 }

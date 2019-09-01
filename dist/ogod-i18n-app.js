@@ -23,6 +23,8 @@ function mixi(Base) {
 export class OgodI18nApp extends mixi(LitElement) {
   constructor() {
     super();
+    this.width = '100vw';
+    this.height = 'calc(100vh - 65px)';
     this.supportedLangs = ['fr', 'en'];
     this.languageResources = this.addBaseHref('/assets/locales/{{lng}}/{{ns}}.json');
   }
@@ -44,6 +46,10 @@ export class OgodI18nApp extends mixi(LitElement) {
 
         ogod-engine#logo-engine {
             user-select: none;
+        }
+
+        ogod-engine#main-engine {
+            overflow: hidden;
         }
 
         h1, h2, h3 {
@@ -68,6 +74,9 @@ export class OgodI18nApp extends mixi(LitElement) {
             color: #216498;
         }
 
+        div.navbar-burger {
+            height: inherit;
+        }
         `;
   }
 
@@ -90,11 +99,11 @@ export class OgodI18nApp extends mixi(LitElement) {
                         </three-renderer>
                     </ogod-engine>
                 </a>
-                <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" @click="${this.openMenu}">
+                <div class="navbar-burger" aria-label="menu" aria-expanded="false" @click="${this.toggleMenu}">
                     <span aria-hidden="true"></span>
                     <span aria-hidden="true"></span>
                     <span aria-hidden="true"></span>
-                </a>
+                </div>
             </div>
             <div class="navbar-menu">
                 <div class="navbar-start" @click="${this.closeMenu}">
@@ -149,7 +158,7 @@ export class OgodI18nApp extends mixi(LitElement) {
             </div>
         </nav>
         <ogod-engine id="${ENGINE_ID_MAIN}" init-scene="${SCENE_ID_START}" pauseonescape>
-            <three-renderer width="100%" height="100%">
+            <three-renderer width="${this.width}" height="${this.height}">
                 <three-scene id="${SCENE_ID_START}" class="ogodCenter"
                     load-map='{ "instances": ["intropoints"] }' background="#a4b0f5">
                     <ogod-site-intro>
@@ -199,11 +208,13 @@ export class OgodI18nApp extends mixi(LitElement) {
     this.geometry.nextGeometry();
   }
 
-  openMenu() {
-    this.shadowRoot.querySelector('.navbar-menu').classList.add('is-active');
+  toggleMenu(event) {
+    event.target.classList.toggle('is-active');
+    this.shadowRoot.querySelector('.navbar-menu').classList.toggle('is-active');
   }
 
   closeMenu() {
+    this.shadowRoot.querySelector('.navbar-burger').classList.remove('is-active');
     this.shadowRoot.querySelector('.navbar-menu').classList.remove('is-active');
   }
 
