@@ -90,14 +90,14 @@ export class OgodI18nApp extends mixi(LitElement) {
                         </three-renderer>
                     </ogod-engine>
                 </a>
-                <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" onclick="document.querySelector('.navbar-menu').classList.toggle('is-active');">
+                <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" @click="${this.openMenu}">
                     <span aria-hidden="true"></span>
                     <span aria-hidden="true"></span>
                     <span aria-hidden="true"></span>
                 </a>
             </div>
             <div class="navbar-menu">
-                <div class="navbar-start" @click="${this.openMenu}">
+                <div class="navbar-start" @click="${this.closeMenu}">
                     <a ogod-action='{ "type": "ENGINE_SCENE_LOAD", "payload": { "id": "${ENGINE_ID_MAIN}", "sceneId": "${SCENE_ID_START}"}}'
                         class="navbar-item">${translate('app:introScene')}</a>
                     <a class="navbar-item" href="https://github.com/Elvynia/ogod-site" target="_blank">
@@ -200,6 +200,10 @@ export class OgodI18nApp extends mixi(LitElement) {
   }
 
   openMenu() {
+    this.shadowRoot.querySelector('.navbar-menu').classList.add('is-active');
+  }
+
+  closeMenu() {
     this.shadowRoot.querySelector('.navbar-menu').classList.remove('is-active');
   }
 

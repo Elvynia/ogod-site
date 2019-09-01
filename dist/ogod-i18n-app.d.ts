@@ -14,5 +14,6 @@ export declare class OgodI18nApp extends OgodI18nApp_base {
     changeLanguages(event: any): void;
     changeLogo(): void;
     openMenu(): void;
+    closeMenu(): void;
 }
 export {};
