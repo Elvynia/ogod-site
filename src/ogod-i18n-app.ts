@@ -24,9 +24,13 @@ export class OgodI18nApp extends mixi(LitElement) {
     renderer: ThreeRendererElement;
 
     private supportedLangs: Array<string>;
+    private width: string;
+    private height: string;
 
     constructor() {
         super();
+        this.width = '100vw';
+        this.height = 'calc(100vh - 65px)';
         this.supportedLangs = ['fr', 'en'];
         (<any>this).languageResources = this.addBaseHref('/assets/locales/{{lng}}/{{ns}}.json');
     }
@@ -48,6 +52,10 @@ export class OgodI18nApp extends mixi(LitElement) {
 
         ogod-engine#logo-engine {
             user-select: none;
+        }
+
+        ogod-engine#main-engine {
+            overflow: hidden;
         }
 
         h1, h2, h3 {
@@ -156,7 +164,7 @@ export class OgodI18nApp extends mixi(LitElement) {
             </div>
         </nav>
         <ogod-engine id="${ENGINE_ID_MAIN}" init-scene="${SCENE_ID_START}" pauseonescape>
-            <three-renderer width="100%" height="100%">
+            <three-renderer width="${this.width}" height="${this.height}">
                 <three-scene id="${SCENE_ID_START}" class="ogodCenter"
                     load-map='{ "instances": ["intropoints"] }' background="#a4b0f5">
                     <ogod-site-intro>
