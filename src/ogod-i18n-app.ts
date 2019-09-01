@@ -44,8 +44,6 @@ export class OgodI18nApp extends mixi(LitElement) {
 
     static get styles() {
         return css`
-        @import url('node_modules/bulma/css/bulma.min.css');
-
         a.navbar-item.no-padding {
             padding: 0;
         }
@@ -183,6 +181,16 @@ export class OgodI18nApp extends mixi(LitElement) {
             </three-renderer>
         </ogod-engine>
         `;
+    }
+
+    firstUpdated(changes) {
+        super.firstUpdated(changes);
+        let link = document.createElement('link');
+        link.href = this.addBaseHref('node_modules/bulma/css/bulma.min.css');
+        link.rel = 'stylesheet';
+        link.type = 'text/css';
+        link.media = 'screen,print';
+        this.shadowRoot.appendChild(link);
     }
 
     connectedCallback() {
