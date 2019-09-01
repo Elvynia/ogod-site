@@ -24,7 +24,7 @@ export class OgodI18nApp extends mixi(LitElement) {
   constructor() {
     super();
     this.supportedLangs = ['fr', 'en'];
-    this.languageResources = '/assets/locales/{{lng}}/{{ns}}.json';
+    this.languageResources = this.addBaseHref('/assets/locales/{{lng}}/{{ns}}.json');
   }
 
   createRenderRoot() {
@@ -205,6 +205,10 @@ export class OgodI18nApp extends mixi(LitElement) {
 
   closeMenu() {
     this.shadowRoot.querySelector('.navbar-menu').classList.remove('is-active');
+  }
+
+  addBaseHref(path) {
+    return window.location.origin + window.location.pathname + (path.startsWith('/') ? path.substring(1, path.length) : path);
   }
 
 }

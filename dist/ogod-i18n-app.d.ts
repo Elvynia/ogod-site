@@ -15,5 +15,6 @@ export declare class OgodI18nApp extends OgodI18nApp_base {
     changeLogo(): void;
     openMenu(): void;
     closeMenu(): void;
+    private addBaseHref;
 }
 export {};
