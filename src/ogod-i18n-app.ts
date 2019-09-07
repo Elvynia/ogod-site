@@ -61,11 +61,11 @@ export class OgodI18nApp extends mixi(LitElement) {
             color: #8e170c;
         }
 
-        h1 {
+        div.heading h1 {
             font-size: 3rem;
         }
 
-        h2 {
+        div.heading h2 {
             font-size: 1.5rem;
         }
 
