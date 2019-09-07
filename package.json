@@ -1,6 +1,6 @@
 {
   "name": "@ogod/site",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "Presentation web site that uses OGOD core & three.",
   "main": "index.js",
   "module": "dist/index.js",
