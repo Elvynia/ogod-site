@@ -12,8 +12,8 @@
   "license": "MIT",
   "author": "Elvynia",
   "dependencies": {
-    "@ogod/core": "^0.1.0",
-    "@ogod/runtime-three": "^0.0.4",
+    "@ogod/core": "^0.1.1",
+    "@ogod/runtime-three": "0.0.5",
     "@webcomponents/webcomponentsjs": "^2.2.10",
     "bulma": "^0.7.5",
     "custom-attributes": "^1.1.3",
