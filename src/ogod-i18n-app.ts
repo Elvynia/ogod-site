@@ -20,9 +20,6 @@ export class OgodI18nApp extends mixi(LitElement) {
     @query('three-random-geometry')
     geometry: ThreeRandomGeometryElement;
 
-    @query('#logoRenderer')
-    renderer: ThreeRendererElement;
-
     private supportedLangs: Array<string>;
     private width: string;
     private height: string;
@@ -90,7 +87,7 @@ export class OgodI18nApp extends mixi(LitElement) {
             <div class="navbar-brand">
                 <a class="navbar-item no-padding" @click="${this.changeLogo}">
                     <ogod-engine id="${ENGINE_ID_LOGO}" init-scene="ogod-default-scene" pauseonescape>
-                        <three-renderer id="logoRenderer" width="65px" height="65px" alpha>
+                        <three-renderer width="65px" height="65px" alpha>
                             <three-scene>
                                 <three-spot-light name="ambient" color="#ffffff" intensity="0.6">
                                     <ogod-property name="POSITION" value='{ "x": 1, "y": 30, "z": 60 }'></ogod-property>
