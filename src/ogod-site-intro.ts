@@ -1,11 +1,11 @@
-import { loadEngineScene, ogodState$, ogodStore, OgodInstanceEntity } from '@ogod/core';
+import { loadEngineScene, ogodState$, ogodStore, OgodInstanceEntity, duration, distance } from '@ogod/core';
 import { ThreePointsRuntime, ThreeSceneRuntime, ThreePointsEntity, ThreePointsElement } from '@ogod/runtime-three';
-import { customElement, html, LitElement } from 'lit-element';
+import { customElement, html } from 'lit-element';
 import { filter, map, switchMap, take } from 'rxjs/operators';
 import { Color } from 'three';
-import { backIn, distance, duration, elasticOut, sineOut } from './animation';
 import { ENGINE_ID_MAIN, SCENE_ID_START } from './constants';
 import { Subscription } from 'rxjs';
+import { elasticOut, sineOut, backIn } from '/web_modules/eases.js';
 
 export const INSTANCE_ID_INTRO = 'intropoints';
 
@@ -61,7 +61,7 @@ export class OgodSiteIntroRuntime extends ThreePointsRuntime {
                         complete: () => duration(1500).pipe(
                             map(sineOut)
                         ).subscribe({
-                            next: (frame) => {
+                            next: (frame: number) => {
                                 if (!this.sceneColor) {
                                     this.sceneColor = new Color().set(arg.scene.background as Color);
                                 }

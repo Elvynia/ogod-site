@@ -17,6 +17,7 @@
         "node_modules/i18next-xhr-backend/i18nextXHRBackend.min.js",
         "node_modules/lit-element-i18n/lit-element-i18n.js",
         "node_modules/bulma/css/bulma.min.css",
+        "node_modules/ease-functions/ease-functions.js",
         "assets/**",
         "index.css"
     ],

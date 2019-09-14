@@ -12,16 +12,17 @@
   "license": "MIT",
   "author": "Elvynia",
   "dependencies": {
-    "@ogod/core": "^0.1.1",
-    "@ogod/runtime-three": "0.0.5",
+    "@ogod/core": "^0.1.3",
+    "@ogod/runtime-three": "0.0.6",
     "@webcomponents/webcomponentsjs": "^2.2.10",
     "bulma": "^0.7.5",
     "custom-attributes": "^1.1.3",
+    "eases": "^1.0.8",
     "lit-element-i18n": "^0.1.1",
     "three": "^0.107.0"
   },
   "devDependencies": {
-    "polymer-cli": "^1.9.11",
+    "@pika/web": "^0.6.1",
     "typescript": "^3.5.3"
   },
   "scripts": {
@@ -50,5 +51,17 @@
   "bugs": {
     "url": "https://github.com/Elvynia/ogod-site/issues"
   },
-  "homepage": "https://github.com/Elvynia/ogod-site#readme"
+  "homepage": "https://github.com/Elvynia/ogod-site#readme",
+  "@pika/web": {
+    "webDependencies": [
+      "eases"
+    ],
+    "namedExports": {
+      "eases": [
+        "backIn",
+        "sineOut",
+        "elasticOut"
+      ]
+    }
+  }
 }
