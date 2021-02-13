@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { IntegrationAngularComponent } from './integration-angular.component';
+import { DocsViewComponent } from './docs-view.component';
 
-describe('IntegrationAngularComponent', () => {
-  let component: IntegrationAngularComponent;
-  let fixture: ComponentFixture<IntegrationAngularComponent>;
+describe('DocsViewComponent', () => {
+  let component: DocsViewComponent;
+  let fixture: ComponentFixture<DocsViewComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ IntegrationAngularComponent ]
+      declarations: [ DocsViewComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(IntegrationAngularComponent);
+    fixture = TestBed.createComponent(DocsViewComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
