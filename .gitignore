@@ -44,3 +44,7 @@ testem.log
 # System Files
 .DS_Store
 Thumbs.db
+
+# Website
+/projects/website/src/assets/worker.js
+/projects/website/src/assets/worker.js.map

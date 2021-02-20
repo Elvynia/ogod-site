@@ -1,6 +1,6 @@
 import { OgodDefaultRegistry, OgodRuntimeEngine } from '@ogod/runtime-core';
 import { OgodThreeRegistry, threeWorkerStream } from '@ogod/runtime-three';
-import { BoxBufferGeometry, SphereBufferGeometry, MeshBasicMaterial, MeshPhongMaterial, PlaneBufferGeometry } from 'three';
+import { BoxBufferGeometry, MeshBasicMaterial, MeshPhongMaterial, PlaneBufferGeometry, SphereBufferGeometry } from 'three';
 
 declare var self: OgodRuntimeEngine;
 

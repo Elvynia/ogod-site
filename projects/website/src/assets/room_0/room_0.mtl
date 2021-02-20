@@ -1,0 +1,12 @@
+newmtl Wood Editable_ee4080b7-39b4-40f3-9843-4a838438591f
+Kd 1.000 1.000 1.000
+d 1.000
+map_Kd Wood_001_Color_3.jpg
+newmtl Concrete_916321a1-e26f-4b5d-877e-ac2a170ecb51
+Kd 1.000 1.000 1.000
+d 1.000
+map_Kd Concrete_014_Color.jpg
+newmtl Concrete 1_1b38e8e2-fcb4-4f7a-84c3-487d57b4c988
+Kd 1.000 1.000 1.000
+d 1.000
+map_Kd Concrete_014_Color.jpg
