@@ -8,7 +8,7 @@ import { ogodDefineKey, ogodDefineKeys, ogodFactoryInstanceProperty } from '@ogo
 import {
     threeDefineCamera, threeDefineControlFly, threeDefineEngine, threeDefineGeometry, threeDefineLightAmbient,
     threeDefineLightPoint, threeDefineLightSpot, threeDefineMaterial, threeDefineMesh, threeDefinePoints, threeDefineRenderer,
-    threeDefineScene, threeDefineTexture, threeDefineVec3, threeDefineObject
+    threeDefineScene, threeDefineTexture, threeDefineVec3, threeDefineObject, threeDefineLightHemisphere, threeDefineFog
 } from '@ogod/element-three';
 
 threeDefineEngine();
@@ -16,8 +16,10 @@ threeDefineRenderer();
 threeDefineCamera();
 threeDefineTexture();
 threeDefineScene();
+threeDefineFog();
 threeDefineVec3();
-threeDefineMaterial('three-material', [], [{
+threeDefineMaterial();
+threeDefineMaterial('three-material-ball', [], [{
     type: ogodFactoryInstanceProperty('MeshPhong'),
     args: {
         get: () => ([{ color: 0xF4A259 }]),
@@ -29,6 +31,7 @@ threeDefineMaterial('three-material', [], [{
 }]);
 threeDefineGeometry();
 threeDefineMesh();
+threeDefineMesh('ngo-color-plane', [], [{ runtime: 'ColorPlane' }]);
 threeDefinePoints('three-points', [], [{
     params: {
         get: () => ({
@@ -46,6 +49,7 @@ threeDefineObject();
 threeDefineLightAmbient();
 threeDefineLightPoint();
 threeDefineLightSpot();
+threeDefineLightHemisphere();
 ogodDefineKey();
 ogodDefineKeys();
 threeDefineControlFly();

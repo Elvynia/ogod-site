@@ -15,70 +15,21 @@
     <three-engine worker-path="./assets/worker.js" running canvas>
         <three-renderer alpha antialias></three-renderer>
         <three-scene active>
-            <three-camera>
-                <three-vec3 key="position" z="5"></three-vec3>
+            <three-camera far="100000">
+                <three-vec3 key="position" x="50" y="40"></three-vec3>
+                <three-vec3 key="lookAt" x="-10" y="0" z="0"></three-vec3>
             </three-camera>
-            <three-light-ambient intensity="0.7"></three-light-ambient>
-            <three-object path="assets/room_0/room_0">
-                <three-vec3 key="position" y="-50"></three-vec3>
-            </three-object>
-            <three-control-fly tick></three-control-fly>
+            <three-fog color="0x00ff00"></three-fog>
+            <three-light-hemisphere color="0xeeeeff" ground-color="0x777788" intensity="0.75"></three-light-hemisphere>
+            <three-object path="assets/room_0/room_0"></three-object>
+            <ngo-color-plane>
+                <three-material type="MeshPhong"></three-material>
+                <three-geometry type="Plane" args="2000 2000 100 100"></three-geometry>
+                <three-vec3 key="rotation" x="-1.5708"></three-vec3>
+                <three-vec3 key="position" y="-1"></three-vec3>
+            </ngo-color-plane>
+            <three-control-fly movement-speed="0.2" tick></three-control-fly>
             <router-outlet></router-outlet>
         </three-scene>
     </three-engine>
 </div>
-
-<!-- <mat-card class="mat-elevation-z6">
-        <mat-card-header class="d-flex flex-column align-items-center">
-            <h2 matCardTitle>Three.js Example</h2>
-        </mat-card-header>
-        <mat-card-content class="d-flex">
-            <three-engine worker-path="./assets/worker.js" running canvas #engine>
-                <three-renderer alpha antialias></three-renderer>
-                <three-texture id="snow1" path="/assets/snowflakes/3.png"></three-texture>
-                <three-texture id="crate" path="/assets/crate.gif"></three-texture>
-                <three-scene [background]="bgColor" active *ngIf="scene">
-                    <three-camera></three-camera>
-                    <three-mesh resource="crate" tick>
-                        <three-material></three-material>
-                        <three-geometry type="Box" args="1 1 1"></three-geometry>
-                        <three-vec3 key="position" x="-1"></three-vec3>
-                        <three-vec3 key="rotator" x="1" y="1.5" z="0.2"></three-vec3>
-                    </three-mesh>
-                    <three-mesh id="ball" *ngIf="ball">
-                        <three-material></three-material>
-                        <three-geometry type="Sphere" args="0.5 32 32"></three-geometry>
-                        <three-vec3 key="position" x="1" z="-1"></three-vec3>
-                    </three-mesh>
-                    <three-points id="points1" resource="snow1" vertices="0 1 1 1 1 1 0 1 0 1 0 1 0 0 1" tick>
-                        <three-vec3 key="rotator" y="1" z="1"></three-vec3>
-                    </three-points>
-                    <three-light-ambient intensity="0.5" [active]="lightA"></three-light-ambient>
-                    <three-light-point distance="2" [active]="lightP"></three-light-point>
-                    <three-light-spot distance="10" color="0x00ff00" [active]="lightS">
-                        <three-vec3 key="position" x="1" y="-2" z="1"></three-vec3>
-                        <three-vec3 key="rotation" x="1.25" z="-0.25"></three-vec3>
-                    </three-light-spot>
-                    <three-control-fly tick>
-                        <three-vec3 key="position" z="5"></three-vec3>
-                    </three-control-fly>
-                </three-scene>
-            </three-engine>
-            <div class="d-flex flex-column px-4">
-                <mat-form-field class="colorPicker">
-                    <mat-label>Scene background</mat-label>
-                    <input matInput [ngxMatColorPicker]="picker" value="#5B8E7D" (colorChange)="refreshColor($event)" readonly>
-                    <ngx-mat-color-toggle matSuffix [for]="picker"></ngx-mat-color-toggle>
-                    <ngx-mat-color-picker color="accent" #picker></ngx-mat-color-picker>
-                </mat-form-field>
-                <mat-checkbox [(ngModel)]="lightA">Ambient light</mat-checkbox>
-                <mat-checkbox [(ngModel)]="lightP">Point light</mat-checkbox>
-                <mat-checkbox [(ngModel)]="lightS">Spot light</mat-checkbox>
-            </div>
-        </mat-card-content>
-        <mat-card-actions>
-            <button mat-button color="primary" (click)="debugState(engine)">Log engine state</button>
-            <button mat-raised-button color="primary" (click)="ball = !ball">{{ ball ? 'Destroy' : 'Add' }} ball</button>
-            <button mat-raised-button color="primary" (click)="scene = !scene">{{ scene ? 'Destroy' : 'Add' }} scene</button>
-        </mat-card-actions>
-    </mat-card> -->
