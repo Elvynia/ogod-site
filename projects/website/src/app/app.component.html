@@ -5,7 +5,7 @@
                 <mat-icon color="primary">home</mat-icon>
             </a>
         </div>
-        <h1>Of Games and Open Development</h1>
+        <h1>Of Games and Open Developments</h1>
         <div class="d-flex align-items-center">
             <a [routerLink]="['/docs']">Docs</a>
         </div>
@@ -14,21 +14,22 @@
 <div class="mat-typography mat-app-background">
     <three-engine worker-path="./assets/worker.js" running canvas>
         <three-renderer alpha antialias></three-renderer>
-        <three-scene active>
-            <three-camera far="100000">
+        <three-scene background="#000000" active>
+            <three-camera far="10000000">
                 <three-vec3 key="position" x="50" y="40"></three-vec3>
                 <three-vec3 key="lookAt" x="-10" y="0" z="0"></three-vec3>
             </three-camera>
-            <three-fog color="0x00ff00"></three-fog>
+            <!-- <three-fog color="0xffffff"></three-fog> -->
             <three-light-hemisphere color="0xeeeeff" ground-color="0x777788" intensity="0.75"></three-light-hemisphere>
-            <three-object path="assets/room_0/room_0"></three-object>
+            <three-object path="assets/room_0/room_0" type="1"></three-object>
             <ngo-color-plane>
                 <three-material type="MeshPhong"></three-material>
                 <three-geometry type="Plane" args="2000 2000 100 100"></three-geometry>
                 <three-vec3 key="rotation" x="-1.5708"></three-vec3>
                 <three-vec3 key="position" y="-1"></three-vec3>
             </ngo-color-plane>
-            <three-control-fly movement-speed="0.2" tick></three-control-fly>
+            <ngo-stars></ngo-stars>
+            <three-control-fly movement-speed="0.1" tick></three-control-fly>
             <router-outlet></router-outlet>
         </three-scene>
     </three-engine>

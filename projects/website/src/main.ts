@@ -32,6 +32,7 @@ threeDefineMaterial('three-material-ball', [], [{
 threeDefineGeometry();
 threeDefineMesh();
 threeDefineMesh('ngo-color-plane', [], [{ runtime: 'ColorPlane' }]);
+threeDefineMesh('ngo-stars', [], [{ runtime: 'Stars' }]);
 threeDefinePoints('three-points', [], [{
     params: {
         get: () => ({
