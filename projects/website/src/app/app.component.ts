@@ -13,6 +13,7 @@ export class AppComponent {
     lightA: boolean;
     lightP: boolean;
     lightS: boolean;
+    docActive: boolean;
 
     constructor() {
         this.bgColor = '#5B8E7D';
@@ -21,6 +22,7 @@ export class AppComponent {
         this.lightA = false;
         this.lightP = true;
         this.lightS = true;
+        this.docActive = location.href.endsWith('/docs');
     }
 
     refreshColor(color: NgxMatColorPickerInputEvent) {

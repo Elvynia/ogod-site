@@ -4,12 +4,13 @@ import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { AppModule } from './app/app.module';
 import { environment } from './environments/environment';
 
-import { ogodDefineKey, ogodDefineKeys, ogodFactoryInstanceProperty } from '@ogod/element-core';
+import { ogodDefineKey, ogodDefineKeys, ogodDefineSystem, ogodFactoryInstanceProperty, ogodFactorySystemChildren, ogodFactorySystemProperty } from '@ogod/element-core';
 import {
     threeDefineCamera, threeDefineControlFly, threeDefineEngine, threeDefineGeometry, threeDefineLightAmbient,
     threeDefineLightPoint, threeDefineLightSpot, threeDefineMaterial, threeDefineMesh, threeDefinePoints, threeDefineRenderer,
     threeDefineScene, threeDefineTexture, threeDefineVec3, threeDefineObject, threeDefineLightHemisphere, threeDefineFog
 } from '@ogod/element-three';
+import { threeDefineBubble } from './app/bubble/define';
 
 threeDefineEngine();
 threeDefineRenderer();
@@ -31,8 +32,8 @@ threeDefineMaterial('three-material-ball', [], [{
 }]);
 threeDefineGeometry();
 threeDefineMesh();
-threeDefineMesh('ngo-color-plane', [], [{ runtime: 'ColorPlane' }]);
-threeDefineMesh('ngo-stars', [], [{ runtime: 'Stars' }]);
+threeDefineMesh('ngo-color-plane', [], [{ runtime: 'color-plane' }]);
+threeDefineMesh('ngo-stars', [], [{ runtime: 'stars' }]);
 threeDefinePoints('three-points', [], [{
     params: {
         get: () => ({
@@ -54,6 +55,11 @@ threeDefineLightHemisphere();
 ogodDefineKey();
 ogodDefineKeys();
 threeDefineControlFly();
+ogodDefineSystem('three-knowledge-base', [{
+    root: ogodFactorySystemProperty(''),
+    position: ogodFactorySystemChildren('vec3', false)
+}], [{ runtime: 'knowledge-base' }]);
+threeDefineBubble();
 
 if (environment.production) {
     enableProdMode();
