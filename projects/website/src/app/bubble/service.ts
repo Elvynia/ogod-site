@@ -54,6 +54,7 @@ export class BubbleService {
             id: 'angular',
             name: 'angular',
             tags: ['ogod']
-        }]).pipe(delay(0));
+        }
+    ]).pipe(delay(0));
     }
 }

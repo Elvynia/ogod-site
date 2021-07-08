@@ -4,9 +4,9 @@ if (typeof Symbol === 'function') {
         (Symbol as any).observable = Symbol('observable');
     }
 }
-import { instanceChanges, instanceDestroy, instanceInit, OgodActionSystem, OgodStateEngine, OgodStateSystem, OGOD_CATEGORY, systemStart } from '@ogod/common';
-import { ogodContainerUpdate$, OgodDefaultRegistry, ogodReactiveUpdate, OgodRuntimeEngine, OgodRuntimeSystemDefault } from '@ogod/runtime-core';
-import { OgodThreeRegistry, threeCreateGeometry, threeCreateMaterial, ThreeRuntimeInstance, ThreeRuntimeMesh, ThreeRuntimePoints, ThreeStateMesh, ThreeStateScene, threeWorkerStream } from '@ogod/runtime-three';
+import { instanceChanges, instanceDestroy, instanceInit, instanceStart, OgodActionActor, OgodActionInstance, OgodActionSystem, OgodStateEngine, OgodStateInstance, OGOD_CATEGORY, systemStart } from '@ogod/common';
+import { ogodContainerUpdateGroup$, ogodContainerUpdateSystem$, OgodDefaultRegistry, ogodReactiveUpdate, OgodRuntimeEngine } from '@ogod/runtime-core';
+import { OgodThreeRegistry, threeCreateGeometry, threeCreateMaterial, ThreeRuntimeInstance, ThreeRuntimeMesh, ThreeRuntimePoints, ThreeStateMesh, ThreeStateScene, threeWorkerStream, ThreeRuntimeGroup, ThreeStateInstance } from '@ogod/runtime-three';
 import { ActionsObservable } from 'redux-observable';
 import { Observable } from 'rxjs';
 import { filter, first, map, pluck, switchMap } from 'rxjs/operators';
@@ -102,9 +102,9 @@ self.onmessage = threeWorkerStream({
     'instance.bubble': class ThreeRuntimeBubble extends ThreeRuntimeMesh {
         camera$: PerspectiveCamera;
 
-        initialize(state: ThreeStateMesh, state$: Observable<OgodStateEngine>, action$: ActionsObservable<any>) {
+        initialize(state: any, state$: Observable<OgodStateEngine>, action$: ActionsObservable<any>) {
             state$.pipe(
-                map((s) => s.scene[state.scenes[0]] as ThreeStateScene),
+                map((s) => s.scene[state.cameraScene] as ThreeStateScene),
                 filter((s) => !!s?.camera$),
                 pluck('camera$'),
                 first()
@@ -118,7 +118,8 @@ self.onmessage = threeWorkerStream({
                     geometry: {
                         ...s.geometry,
                         args: [s.size, s.geometry.args[1], s.geometry.args[2]]
-                    }
+                    },
+                    precision: 1
                 }, state$, action$))
             );
         }
@@ -135,21 +136,23 @@ self.onmessage = threeWorkerStream({
             }
         }
 
-        update(delta: number, state: ThreeStateMesh) {
-            // if (this.camera$) {
-            //     let pos = state.object$.position.clone();
-            //     this.camera$.updateMatrixWorld();
-            //     pos.project(this.camera$ as any);
-            //     if (pos.x <= 1 && pos.y >= -1) {
-            //         console.log(state.id + ' visible!',pos.x, pos.y)
-            //         pos.x = (pos.x + 1) * self.canvas.width / 2;
-            //         pos.y = - (pos.y - 1) * self.canvas.height / 2;
-            //         pos.z = 0;
-            //         (state as any).textPosition = pos.clone();
-            //     } else {
-            //         (state as any).textPosition = null;
-            //     }
-            // }
+        update(delta: number, state: any) {
+            if (this.camera$) {
+                let pos = new Vector3();
+                state.object$.getWorldPosition(pos);
+                this.camera$.updateMatrixWorld();
+                pos.project(this.camera$);
+                if (pos.x <= 1 && pos.y >= -1 && pos.x >= -1 && pos.y <= 1) {
+                    pos.x = (pos.x + 1) * self.canvas.width / 2;
+                    pos.y = - (pos.y - 1) * self.canvas.height / 2;
+                    if (!state.textPosition || Math.abs(pos.x - state.textPosition.x) > state.precision
+                        || Math.abs(pos.y - state.textPosition.y) > state.precision) {
+                        state.textPosition = pos.clone();
+                    }
+                } else {
+                    state.textPosition = null;
+                }
+            }
         }
     },
     'instance.link': class ThreeRuntimeLink extends ThreeRuntimeMesh {
@@ -160,11 +163,11 @@ self.onmessage = threeWorkerStream({
             return super.initializeSuccess(state);
         }
     },
-    'system.knowledge-base': class ThreeRuntimeKnowledgeBase extends OgodRuntimeSystemDefault {
+    'instance.knowledge-base': class ThreeRuntimeKnowledgeBase extends ThreeRuntimeGroup {
 
-        initialize(state: any, state$: Observable<OgodStateEngine>, action$: ActionsObservable<any>): Observable<OgodActionSystem> {
+        initialize(state: any, state$: Observable<OgodStateEngine>, action$: ActionsObservable<any>): Observable<OgodActionInstance> {
             return state$.pipe(
-                map((s) => s.system[state.id] as any),
+                map((s) => s.instance[state.id] as any),
                 filter((s) => !!s.root),
                 first(),
                 switchMap((s) => super.initialize({
@@ -178,25 +181,30 @@ self.onmessage = threeWorkerStream({
             );
         }
 
-        start(state, state$) {
-            console.log('[SYSTEM] Start custom', state.id);
+        start(state: any, state$: Observable<OgodStateEngine>): OgodActionActor<OgodStateInstance> {
+            console.log('[GROUP] Start custom', state.id);
             state.running = true;
-            if (state.aspects) {
-                state.sub$['ogodContainerUpdate'] = ogodContainerUpdate$(this, state, state$ as any).subscribe(({ added, removed }) => {
-                    added.forEach((instance: any) => {
-                        this.add(state, instance);
+            state.sub$['ogodContainerUpdate'] = ogodContainerUpdateGroup$(state, state$).subscribe(({ added, removed }) => {
+                added.forEach((instance: any) => {
+                    this.add(state, instance);
+                    if (instance.bubble) {
                         state.graph.points.push(this.createPoint(instance.bubble.id));
-                    });
-                    removed.forEach((id) => {
-                        const instance: any = self.store.getState().instance[id];
-                        this.remove(state, id, instance);
-                        state.graph.points.splice(state.graph.points.findIndex((p) => p.id === instance.bubble.id), 1);
-                    });
-                    this.updateGraph(state);
+                    }
                 });
-            }
-            state.sub$['ogodReactiveUpdate'] = ogodReactiveUpdate(this as any, state);
-            return systemStart({ id: state.id, state });
+                removed.forEach((id) => {
+                    const instance = self.store.getState().instance[id] as any;
+                    this.remove(state, id, instance);
+                    if (instance.bubble) {
+                        state.graph.points.splice(state.graph.points.findIndex((p) => p.id === instance.bubble.id), 1);
+                    }
+                });
+                this.updateGraph(state);
+            });
+            state.sub$['ogodReactiveUpdate'] = ogodReactiveUpdate(this, state);
+            return instanceStart({
+                id: state.id,
+                state
+            });
         }
 
         destroy(state: any, state$: Observable<OgodStateEngine>) {
@@ -206,7 +214,6 @@ self.onmessage = threeWorkerStream({
             state.graph?.links.forEach((l) => self.store.dispatch(instanceDestroy({
                 id: l.id
             })));
-            console.log('DESTROY SYS')
             return super.destroy(state, state$);
         }
 
@@ -286,7 +293,7 @@ self.onmessage = threeWorkerStream({
                                 category: OGOD_CATEGORY.INSTANCE,
                                 runtime: 'link',
                                 id: linkId,
-                                scenes: ['ogod-scene-default'],
+                                groups: ['ogod-instance-knowledge-base'],
                                 tick: false,
                                 reflects: [],
                                 updates: [],
@@ -348,14 +355,14 @@ self.onmessage = threeWorkerStream({
         protected getPointPosition(state, point) {
             const space = 20;
             if (point.level === 0) {
-                return state.position;
+                return new Vector3();
             } else {
                 const index = point.parent.children.findIndex((p) => p.id === point.id);
                 const pair = index % 2 === 0;
                 return {
-                    x: pair ? state.position.x + (index + 1) * space : state.position.x,
-                    y: state.position.y + point.level * space,
-                    z: pair ? state.position.z : state.position.z + (index + 1) * 8
+                    x: pair ? (index + 1) * space : 0,
+                    y: point.level * space,
+                    z: pair ? 0 : (index + 1) * 8
                 }
             }
         }

@@ -8,7 +8,7 @@ import { ogodDefineKey, ogodDefineKeys, ogodDefineSystem, ogodFactoryInstancePro
 import {
     threeDefineCamera, threeDefineControlFly, threeDefineEngine, threeDefineGeometry, threeDefineLightAmbient,
     threeDefineLightPoint, threeDefineLightSpot, threeDefineMaterial, threeDefineMesh, threeDefinePoints, threeDefineRenderer,
-    threeDefineScene, threeDefineTexture, threeDefineVec3, threeDefineObject, threeDefineLightHemisphere, threeDefineFog
+    threeDefineScene, threeDefineTexture, threeDefineVec3, threeDefineObject, threeDefineLightHemisphere, threeDefineFog, threeDefineGroup
 } from '@ogod/element-three';
 import { threeDefineBubble } from './app/bubble/define';
 
@@ -55,9 +55,8 @@ threeDefineLightHemisphere();
 ogodDefineKey();
 ogodDefineKeys();
 threeDefineControlFly();
-ogodDefineSystem('three-knowledge-base', [{
-    root: ogodFactorySystemProperty(''),
-    position: ogodFactorySystemChildren('vec3', false)
+threeDefineGroup('three-knowledge-base', [{
+    root: ogodFactoryInstanceProperty('')
 }], [{ runtime: 'knowledge-base' }]);
 threeDefineBubble();
 
