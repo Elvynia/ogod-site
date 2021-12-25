@@ -142,9 +142,9 @@ self.onmessage = threeWorkerStream({
                 state.object$.getWorldPosition(pos);
                 this.camera$.updateMatrixWorld();
                 pos.project(this.camera$);
-                if (pos.x <= 1 && pos.y >= -1 && pos.x >= -1 && pos.y <= 1) {
-                    pos.x = (pos.x + 1) * self.canvas.width / 2;
-                    pos.y = - (pos.y - 1) * self.canvas.height / 2;
+                if (pos.x <= 1 && pos.y >= -1 && pos.x >= -1 && pos.y <= 1 && pos.z < 1) {
+                    pos.x = pos.x * self.canvas.width / 2 + self.canvas.width / 2;
+                    pos.y = -pos.y * self.canvas.height / 2 + self.canvas.height / 2;
                     if (!state.textPosition || Math.abs(pos.x - state.textPosition.x) > state.precision
                         || Math.abs(pos.y - state.textPosition.y) > state.precision) {
                         state.textPosition = pos.clone();

@@ -1,6 +1,6 @@
 <three-knowledge-base aspects="bubble" [root]="root" accept-unloaded tick #sys>
     <three-vec3 key="position" x="0" y="40" z="0"></three-vec3>
-    <!-- <three-vec3 key="rotator" x="0" y="0.8" z="0"></three-vec3> -->
+    <three-vec3 key="rotator" x="0" y="0.8" z="0"></three-vec3>
 </three-knowledge-base>
 <div class="label" [style.top]="label.value.y + 'px'" [style.left]="label.value.x + 'px'" *ngFor="let label of bubbles | async | keyvalue">
     {{ label.value.text }}
