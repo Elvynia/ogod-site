@@ -13,21 +13,30 @@
 </mat-toolbar>
 <div class="mat-typography mat-app-background">
     <three-engine worker-path="./assets/worker.js" running canvas>
-        <three-renderer alpha antialias></three-renderer>
+        <three-renderer alpha antialias #renderer>
+            <div class="h-line"></div>
+            <div class="v-line"></div>
+        </three-renderer>
         <three-scene background="#000000" active>
+            <ogod-system aspects="action" bindings="action#" tick (translator)="toggleTranslator()" (docs)="toggleDocs()">
+                <ogod-keys [active]="!(focus | async)">
+                    <ogod-key code="KeyF" name="interact"></ogod-key>
+                </ogod-keys>
+            </ogod-system>
             <three-camera far="10000000">
                 <three-vec3 key="position" x="50" y="40"></three-vec3>
                 <three-vec3 key="lookAt" x="-10" y="0" z="0"></three-vec3>
             </three-camera>
+            <three-shader-glow id="glow"></three-shader-glow>
             <!-- <three-fog color="0xffffff"></three-fog> -->
             <three-light-hemisphere color="0xeeeeff" ground-color="0x777788" intensity="0.75"></three-light-hemisphere>
             <three-object path="assets/room_0/room_0" type="1"></three-object>
-            <three-mesh id="ball" tick [active]="!docActive">
-                <three-material-ball></three-material-ball>
+            <ngo-interact-cube id="docs" action="docs" tick [active]="!docActive">
+                <three-material-ball color="#084887"></three-material-ball>
                 <three-geometry type="Box" args="8 8 8"></three-geometry>
                 <three-vec3 key="position" x="0" y="40" z="0"></three-vec3>
-                <three-vec3 key="rotator" x="1.5" y="1" z="0.5"></three-vec3>
-            </three-mesh>
+                <three-vec3 key="rotator" x="1.2" y="1" z="0.5"></three-vec3>
+            </ngo-interact-cube>
             <ngo-color-plane>
                 <three-material type="MeshPhong"></three-material>
                 <three-geometry type="Plane" args="2000 2000 100 100"></three-geometry>
@@ -39,7 +48,13 @@
                 <three-vec3 key="position" x="-200" y="0" z="50"></three-vec3>
                 <three-vec3 key="scale" x="50" y="50" z="50"></three-vec3>
             </three-object>
-            <three-control-fly movement-speed="0.1" tick></three-control-fly>
+            <three-control-fly movement-speed="0.1" [active]="!(focus | async)" tick></three-control-fly>
+            <ngo-interact-cube id="transator" action="translator" tick>
+                <three-material-ball color="#C879FF"></three-material-ball>
+                <three-geometry type="Box" args="8 8 8"></three-geometry>
+                <three-vec3 key="position" x="10" y="40" z="10"></three-vec3>
+                <three-vec3 key="rotator" x="0.5" y="1" z="1.2"></three-vec3>
+            </ngo-interact-cube>
             <router-outlet></router-outlet>
         </three-scene>
     </three-engine>

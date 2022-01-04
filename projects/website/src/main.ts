@@ -4,13 +4,16 @@ import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { AppModule } from './app/app.module';
 import { environment } from './environments/environment';
 
-import { ogodDefineKey, ogodDefineKeys, ogodDefineSystem, ogodFactoryInstanceProperty, ogodFactorySystemChildren, ogodFactorySystemProperty } from '@ogod/element-core';
+import { ogodDefineKey, ogodDefineKeys, ogodDefineResource, ogodDefineSystem, ogodFactoryInstanceArrayString, ogodFactoryInstanceBoolean, ogodFactoryInstanceChildren, ogodFactoryInstanceProperty, ogodFactoryParent, ogodFactorySystemChildren, ogodFactorySystemProperty } from '@ogod/element-core';
 import {
     threeDefineCamera, threeDefineControlFly, threeDefineEngine, threeDefineGeometry, threeDefineLightAmbient,
     threeDefineLightPoint, threeDefineLightSpot, threeDefineMaterial, threeDefineMesh, threeDefinePoints, threeDefineRenderer,
     threeDefineScene, threeDefineTexture, threeDefineVec3, threeDefineObject, threeDefineLightHemisphere, threeDefineFog, threeDefineGroup
 } from '@ogod/element-three';
 import { threeDefineBubble } from './app/bubble/define';
+import { property, dispatch } from 'hybrids';
+
+const actionHybrid = (action: string = 'default') => ({ action: ogodFactoryInstanceProperty(action) });
 
 threeDefineEngine();
 threeDefineRenderer();
@@ -20,10 +23,16 @@ threeDefineScene();
 threeDefineFog();
 threeDefineVec3();
 threeDefineMaterial();
-threeDefineMaterial('three-material-ball', [], [{
+threeDefineMaterial('three-material-ball', [{
+    color: property('#F4A259', (host, key) => {
+        if (host.hasAttribute(key)) {
+            host[key] = host.getAttribute(key);
+        }
+    })
+}], [{
     type: ogodFactoryInstanceProperty('MeshPhong'),
     args: {
-        get: () => ([{ color: 0xF4A259 }]),
+        get: (host) => ([{ color: host.color }]),
         connect: (host, key) => {
             host.state[key] = host[key];
             return () => null;
@@ -32,6 +41,14 @@ threeDefineMaterial('three-material-ball', [], [{
 }]);
 threeDefineGeometry();
 threeDefineMesh();
+threeDefineMesh('ngo-interact-cube', [{
+    ...actionHybrid(),
+    glow: ogodFactoryInstanceBoolean(false)
+}], [{
+    runtime: 'glow-cube',
+    updates: ogodFactoryInstanceArrayString(['glow']),
+    watches: ogodFactoryInstanceArrayString(['glow'])
+}]);
 threeDefineMesh('ngo-color-plane', [], [{ runtime: 'color-plane' }]);
 threeDefineMesh('ngo-stars', [], [{ runtime: 'stars' }]);
 threeDefinePoints('three-points', [], [{
@@ -52,6 +69,19 @@ threeDefineLightAmbient();
 threeDefineLightPoint();
 threeDefineLightSpot();
 threeDefineLightHemisphere();
+ogodDefineSystem(undefined, [{
+    keys: ogodFactoryInstanceChildren('keys', false, undefined, (host, value, last) => {
+        const pressed = value[0].state.values.find((key) => key.name === 'interact')?.pressed;
+        if (pressed && host.action) {
+            dispatch(host, host.action);
+        }
+    }),
+    action: ogodFactorySystemProperty('')
+}], [{ runtime: 'actions' }]);
+ogodDefineResource('three-shader-glow', [{
+    scene: ogodFactoryParent('scene'),
+    sceneId: ({ scene }) => scene.id
+}], [{ runtime: 'shader-glow' }], ['sceneId']);
 ogodDefineKey();
 ogodDefineKeys();
 threeDefineControlFly();

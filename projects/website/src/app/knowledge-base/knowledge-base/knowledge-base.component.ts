@@ -42,6 +42,7 @@ export class KnowledgeBaseComponent implements OnInit, AfterViewInit {
                 engine.worker.postMessage(instanceInit({
                     id,
                     state: {
+                        action: this.defaultRoot === bubble.id ? 'docs' : undefined,
                         active: true,
                         category: OGOD_CATEGORY.INSTANCE,
                         runtime: 'bubble',

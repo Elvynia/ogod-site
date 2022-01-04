@@ -1,5 +1,8 @@
 import { Component } from '@angular/core';
 import { NgxMatColorPickerInputEvent } from '@angular-material-components/color-picker';
+import { Router } from '@angular/router';
+import { FocusService } from './focus.service';
+import { Observable } from 'rxjs';
 
 @Component({
     selector: 'ogod-root',
@@ -14,8 +17,10 @@ export class AppComponent {
     lightP: boolean;
     lightS: boolean;
     docActive: boolean;
+    translatorActive: boolean;
+    focus: Observable<boolean>;
 
-    constructor() {
+    constructor(private router: Router, private focusService: FocusService) {
         this.bgColor = '#5B8E7D';
         this.scene = true;
         this.ball = false;
@@ -23,6 +28,8 @@ export class AppComponent {
         this.lightP = true;
         this.lightS = true;
         this.docActive = location.href.endsWith('/docs');
+        this.translatorActive = location.href.endsWith('/translate');
+        this.focus = this.focusService.state;
     }
 
     refreshColor(color: NgxMatColorPickerInputEvent) {
@@ -30,6 +37,24 @@ export class AppComponent {
             this.bgColor = '#' + color.value.hex;
         } else {
             this.bgColor = null;
+        }
+    }
+
+    toggleTranslator() {
+        this.translatorActive = !this.translatorActive;
+        if (this.translatorActive) {
+            this.router.navigate(['translate']);
+        } else {
+            this.router.navigate(['/'])
+        }
+    }
+
+    toggleDocs() {
+        this.docActive = !this.docActive;
+        if (this.docActive) {
+            this.router.navigate(['docs']);
+        } else {
+            this.router.navigate(['/']);
         }
     }
 

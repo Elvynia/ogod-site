@@ -4,6 +4,7 @@
   "scripts": {
     "start": "ng serve",
     "build": "ng build",
+    "dev": "webpack --watch --config ./projects/website/webpack.worker.js",
     "pack": "webpack --config ./projects/website/webpack.worker.js"
   },
   "private": true,

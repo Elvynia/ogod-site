@@ -1,0 +1,15 @@
+<mat-card class="mat-elevation-z3">
+    <mat-card-header>
+        <h2 matCardTitle>Translate</h2>
+    </mat-card-header>
+    <mat-card-content class="d-flex justify-content-around">
+        <mat-form-field>
+            <mat-label>Text</mat-label>
+            <textarea matInput [formControl]="control" (focus)="focusService.changeState(true)"
+                (blur)="focusService.changeState(false)"></textarea>
+        </mat-form-field>
+        <div>
+            {{ result }}
+        </div>
+    </mat-card-content>
+</mat-card>

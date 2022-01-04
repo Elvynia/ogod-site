@@ -1,0 +1,10 @@
+:host {
+    display: flex;
+    flex-direction: column;
+}
+
+mat-card {
+    margin: 5rem auto 0 auto;
+    width: 300px;
+    background-color: white;
+}

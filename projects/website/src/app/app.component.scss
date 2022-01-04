@@ -2,8 +2,30 @@ div.mat-app-background {
     height: calc(100vh - 64px);
 }
 
+three-scene {
+    overflow: hidden;
+}
+
 mat-form-field {
     font-size: 20px;
+}
+
+.h-line, .v-line {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+}
+
+.h-line {
+    width: 42px;
+    height: 1px;
+}
+
+.v-line {
+    width: 1px;
+    height: 42px;
 }
 
 .colorPicker {
