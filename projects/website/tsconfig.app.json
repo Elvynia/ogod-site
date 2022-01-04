@@ -2,8 +2,7 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "outDir": "../../out-tsc/app",
-    "types": []
+    "outDir": "../../out-tsc/app"
   },
   "files": [
     "src/main.ts",
@@ -13,6 +12,8 @@
     "src/**/*.d.ts"
   ],
   "exclude": [
-    "src/worker.ts"
+    "src/worker.ts",
+    "src/worker/*",
+    "node_modules"
   ]
 }
