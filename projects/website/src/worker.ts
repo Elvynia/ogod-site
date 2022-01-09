@@ -15,6 +15,9 @@ import { ThreeRuntimeKnowledgeBase } from './worker/knowledge-base';
 import { ThreeRuntimeLink } from './worker/link';
 import { ThreeRuntimeShaderGlow } from './worker/shader-glow';
 import { ThreeRuntimeStars } from './worker/stars';
+import { ThreeRuntimeVoxelMaterial } from './worker/voxel-material';
+import { ThreeRuntimeVoxelWorld } from './worker/voxel-world';
+import { PhysiRuntimeScene } from './worker/physi-scene';
 
 declare var self: OgodRuntimeEngine;
 
@@ -23,6 +26,7 @@ self.onmessage = threeWorkerStream({
     ...OgodDefaultRegistry,
     ...OgodThreeRegistry,
     'resource.shader-glow': ThreeRuntimeShaderGlow,
+    'resource.voxel': ThreeRuntimeVoxelMaterial,
     'geometry.BoxBuffer': BoxBufferGeometry,
     'geometry.SphereBuffer': SphereBufferGeometry,
     'geometry.BasicBuffer': BufferGeometry,
@@ -37,5 +41,7 @@ self.onmessage = threeWorkerStream({
     'instance.link': ThreeRuntimeLink,
     'instance.knowledge-base': ThreeRuntimeKnowledgeBase,
     'instance.glow-cube': ThreeRuntimeGlowCube,
-    'system.actions': ThreeRuntimeActionsSystem
+    'system.actions': ThreeRuntimeActionsSystem,
+    'system.voxel-world': ThreeRuntimeVoxelWorld,
+    'scene.physi': PhysiRuntimeScene
 }, '/');

@@ -24,8 +24,6 @@ void main()
     gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
 }`;
 
-declare var self: ThreeRuntimeEngine;
-
 export class ThreeRuntimeShaderGlow extends OgodRuntimeResourceDefault {
 
     initialize(state, state$: Observable<ThreeStateEngine>) {
@@ -37,10 +35,10 @@ export class ThreeRuntimeShaderGlow extends OgodRuntimeResourceDefault {
             switchMap((camera: any) => {
                 state.data$ = new ShaderMaterial({
                     uniforms: {
-                        "c": { type: "f", value: 1.0 },
-                        "p": { type: "f", value: 1.4 },
-                        glowColor: { type: "c", value: new Color(0xdddd00) },
-                        viewVector: { type: "v3", value: camera.position }
+                        "c": { value: 1.0 },
+                        "p": { value: 1.4 },
+                        glowColor: { value: new Color(0xdddd00) },
+                        viewVector: { value: camera.position }
                     },
                     vertexShader: SHADER_VERTEX,
                     fragmentShader: SHADER_FRAGMENT,

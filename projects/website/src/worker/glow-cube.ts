@@ -22,10 +22,8 @@ export class ThreeRuntimeGlowCube extends ThreeRuntimeMesh {
 
     updateStateGlow(_, state: any) {
         if (state.glow) {
-            // state.object$.material.color.setHex(0xffffff);
             state.object$.add(state.glowMesh$);
         } else {
-            // state.object$.material.color.setStyle(state.material.args[0].color);
             state.object$.remove(state.glowMesh$)
         }
     }

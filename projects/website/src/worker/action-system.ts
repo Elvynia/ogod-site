@@ -2,20 +2,23 @@ import { Raycaster, Vector2 } from 'three';
 import { OgodRuntimeEngine, OgodRuntimeSystemDefault } from "@ogod/runtime-core";
 import { ActionsObservable, ofType } from 'redux-observable';
 import { sceneInitSuccess } from '@ogod/common';
-import { first, map, switchMap } from 'rxjs/operators';
+import { filter, first, map, switchMap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { ThreeStateEngine, ThreeStateScene } from '@ogod/runtime-three';
 
 declare var self: OgodRuntimeEngine;
 
 export class ThreeRuntimeActionsSystem extends OgodRuntimeSystemDefault {
 
-    initialize(state, state$, action$: ActionsObservable<any>) {
+    initialize(state, state$: Observable<ThreeStateEngine>, action$: ActionsObservable<any>) {
         state.targets = [];
         state.raycaster = new Raycaster();
         state.center = new Vector2(0, 0);
-        return action$.pipe(
-            ofType(sceneInitSuccess.type),
+        return state$.pipe(
+            filter((s) => s.scene[state.sceneId]?.loaded),
+            map((s) => s.scene[state.sceneId]),
             first(),
-            map(({ state: sceneState }) => {
+            map((sceneState: ThreeStateScene) => {
                 return {
                     ...state,
                     camera$: sceneState.camera$
