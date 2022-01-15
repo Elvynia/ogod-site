@@ -79,7 +79,9 @@ export class ThreeRuntimeKnowledgeBase extends ThreeRuntimeGroup {
             state.graph.root = state.graph.points.find((p) => p.id === state.root);
             state.graph.root.level = 0;
             state.graph.root.pending = false;
-            this.updateBubble('bubble-' + state.root, this.getPointSize(state, state.graph.root), this.getPointPosition(state, state.graph.root));
+            this.setPointPosition(state, state.graph.root);
+            this.setPointSize(state, state.graph.root);
+            this.updateBubble('bubble-' + state.root, state.graph.root);
         }
         if (state.graph.root) {
             const updates = [];
@@ -105,8 +107,14 @@ export class ThreeRuntimeKnowledgeBase extends ThreeRuntimeGroup {
             if (!safe) {
                 console.log('failsafe used')
             } else {
-                updates.forEach((point) => this.updateBubble('bubble-' + point.id, this.getPointSize(state, point), this.getPointPosition(state, point)));
-                this.updateBubble('bubble-' + state.root, this.getPointSize(state, state.graph.root), this.getPointPosition(state, state.graph.root));
+                updates.forEach((point) => {
+                    this.setPointPosition(state, point);
+                    this.setPointSize(state, point);
+                    this.updateBubble('bubble-' + point.id, point);
+                });
+                this.setPointSize(state, state.graph.root);
+                this.setPointPosition(state, state.graph.root);
+                this.updateBubble('bubble-' + state.root, state.graph.root);
                 this.updateLinks(state);
             }
         }
@@ -162,12 +170,12 @@ export class ThreeRuntimeKnowledgeBase extends ThreeRuntimeGroup {
         });
     }
 
-    protected updateBubble(id, size, position) {
+    protected updateBubble(id, point) {
         self.store.dispatch(instanceChanges({
             id,
             changes: {
-                size,
-                position
+                size: point.size,
+                position: point.position
             } as any
         }));
     }
@@ -194,22 +202,25 @@ export class ThreeRuntimeKnowledgeBase extends ThreeRuntimeGroup {
         }
     }
 
-    protected getPointSize(state, point) {
-        return ((state.graph.maxLevel + 1 - point.level) + point.children.length) * 1.5;
+    protected setPointSize(state, point) {
+        point.size = ((state.graph.maxLevel + 1 - point.level) + point.children.length) * 1.5;
     }
 
-    protected getPointPosition(state, point) {
+    protected setPointPosition(state, point) {
         const space = 20;
         if (point.level === 0) {
-            return new Vector3();
+            point.position = new Vector3();
         } else {
             const index = point.parent.children.findIndex((p) => p.id === point.id);
             const pair = index % 2 === 0;
-            return {
-                x: pair ? (index + 1) * space : 0,
+            const zpair = point.level % 2 === 0;
+            const pos = (index + 1) * space;
+            point.position = {
+                x: point.parent.position.x + (pair ? pos : (zpair ? 0 : -pos)),
                 y: point.level * space,
-                z: pair ? 0 : (index + 1) * 8
-            }
+                z: point.parent.position.z + (pair ? (zpair ? -pos : 0) : pos)
+            };
+            console.log('POINT %s POS:', point.id, point.position, point.parent.position);
         }
     }
 }

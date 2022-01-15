@@ -27,8 +27,8 @@ export class BubbleService {
             name: 'projects',
             tags: ['ogod']
         }, {
-            id: 'docs',
-            name: 'docs',
+            id: 'integration',
+            name: 'integration',
             tags: ['ogod']
         }, {
             id: 'common',
@@ -53,7 +53,11 @@ export class BubbleService {
         }, {
             id: 'angular',
             name: 'angular',
-            tags: ['ogod']
+            tags: ['integration']
+        }, {
+            id: 'js',
+            name: 'js',
+            tags: ['hybrids']
         }
     ]).pipe(delay(0));
     }
