@@ -4,6 +4,8 @@
 /dist
 /tmp
 /out-tsc
+assets/*.js
+assets/*.js.map
 # Only exists if Bazel was run
 /bazel-out
 
